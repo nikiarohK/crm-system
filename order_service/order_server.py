@@ -14,7 +14,7 @@ import os
 POSTGRES_CONFIG = {
     "host": os.getenv("POSTGRES_HOST", "localhost"),
     "port": os.getenv("POSTGRES_PORT", "5432"),
-    "dbname": os.getenv("POSTGRES_DB_ORDERS", "order_db"),
+    "dbname": os.getenv("POSTGRES_DB", "crm_db"),
     "user": os.getenv("POSTGRES_USER", "postgres"),
     "password": os.getenv("POSTGRES_PASSWORD", "123456")
 }
@@ -57,7 +57,11 @@ class OrderService(OrderServiceServicer):
                         product_name TEXT NOT NULL,
                         price DECIMAL(10,2) NOT NULL,
                         created_at TIMESTAMP NOT NULL,
-                        CONSTRAINT valid_price CHECK (price > 0)
+                        CONSTRAINT valid_price CHECK (price > 0),
+                        CONSTRAINT fk_customer 
+                            FOREIGN KEY (customer_id) 
+                            REFERENCES customers(id)
+                            ON DELETE CASCADE
                     )
                 ''')
                 conn.commit()
@@ -99,8 +103,6 @@ class OrderService(OrderServiceServicer):
                 created_at=created_at.isoformat()
             )
         except psycopg2.IntegrityError as e:
-            if "foreign key" in str(e):
-                context.abort(grpc.StatusCode.NOT_FOUND, "Клиент не найден")
             context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
 
     def GetCustomerOrder(self, request, context):

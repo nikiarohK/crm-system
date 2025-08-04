@@ -11,11 +11,10 @@ from crm_pb2 import *
 from crm_pb2_grpc import *
 import os
 
-# Конфигурация PostgreSQL для Order Service
 POSTGRES_CONFIG = {
     "host": os.getenv("POSTGRES_HOST", "localhost"),
     "port": os.getenv("POSTGRES_PORT", "5432"),
-    "dbname": os.getenv("POSTGRES_DB_ORDERS", "order_db"),  # Отдельная БД для заказов
+    "dbname": os.getenv("POSTGRES_DB", "crm_db"),
     "user": os.getenv("POSTGRES_USER", "postgres"),
     "password": os.getenv("POSTGRES_PASSWORD", "123456")
 }
@@ -42,7 +41,7 @@ class PostgresConnectionPool:
     def put_conn(self, conn):
         self.pool.putconn(conn)
 
-class OrderService(OrderServiceServicer):
+class CustomerService(CustomerServiceServicer):
     def __init__(self):
         self.pool = PostgresConnectionPool()
         self._init_db()
@@ -52,13 +51,11 @@ class OrderService(OrderServiceServicer):
         try:
             with conn.cursor() as cursor:
                 cursor.execute('''
-                    CREATE TABLE IF NOT EXISTS orders (
+                    CREATE TABLE IF NOT EXISTS customers (
                         id TEXT PRIMARY KEY,
-                        customer_id TEXT NOT NULL,
-                        product_name TEXT NOT NULL,
-                        price DECIMAL(10,2) NOT NULL,
-                        created_at TIMESTAMP NOT NULL,
-                        CONSTRAINT valid_price CHECK (price > 0)
+                        name TEXT NOT NULL,
+                        email TEXT NOT NULL UNIQUE,
+                        created_at TIMESTAMP NOT NULL
                     )
                 ''')
                 conn.commit()
@@ -81,58 +78,106 @@ class OrderService(OrderServiceServicer):
         finally:
             self.pool.put_conn(conn)
 
-    def CreateOrder(self, request, context):
-        order_id = str(uuid.uuid4())
+    def CreateCustomer(self, request, context):
+        customer_id = str(uuid.uuid4())
         created_at = datetime.now()
-        
-        # Валидация
-        if request.price <= 0:
-            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "Цена должна быть положительной")
         
         try:
             self._execute_query(
-                '''INSERT INTO orders (id, customer_id, product_name, price, created_at)
-                   VALUES (%s, %s, %s, %s, %s)''',
-                (order_id, request.customer_id, request.product_name, request.price, created_at)
+                '''INSERT INTO customers (id, name, email, created_at)
+                   VALUES (%s, %s, %s, %s)''',
+                (customer_id, request.name, request.email, created_at)
             )
-            return OrderResponse(
-                id=order_id,
-                customer_id=request.customer_id,
-                product_name=request.product_name,
-                price=request.price,
+            return CustomerResponse(
+                id=customer_id,
+                name=request.name,
+                email=request.email,
                 created_at=created_at.isoformat()
             )
         except psycopg2.IntegrityError as e:
-            if "foreign key" in str(e):
-                context.abort(grpc.StatusCode.NOT_FOUND, "Клиент не найден")
+            if "duplicate key" in str(e):
+                context.abort(grpc.StatusCode.ALREADY_EXISTS, "Email уже существует")
             context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
 
-    def GetCustomerOrder(self, request, context):
-        results = self._execute_query(
-            '''SELECT id, customer_id, product_name, price, created_at 
-               FROM orders WHERE customer_id = %s
-               ORDER BY created_at DESC''',
-            (request.customer_id,),
+    def GetCustomer(self, request, context):
+        customer = self._execute_query(
+            '''SELECT id, name, email, created_at 
+               FROM customers WHERE id = %s''',
+            (request.id,),
+            fetchone=True
+        )
+        
+        if not customer:
+            context.abort(grpc.StatusCode.NOT_FOUND, "Клиент не найден")
+            
+        return CustomerResponse(
+            id=customer[0],
+            name=customer[1],
+            email=customer[2],
+            created_at=customer[3].isoformat()
+        )
+
+    def UpdateCustomer(self, request, context):
+        try:
+            self._execute_query(
+                '''UPDATE customers 
+                   SET name = %s, email = %s 
+                   WHERE id = %s''',
+                (request.name, request.email, request.id)
+            )
+            return CustomerResponse(
+                id=request.id,
+                name=request.name,
+                email=request.email,
+                created_at="" 
+            )
+        except psycopg2.Error as e:
+            context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
+
+    def DeleteCustomer(self, request, context):
+        try:
+            self._execute_query(
+                '''DELETE FROM customers WHERE id = %s''',
+                (request.id,)
+            )
+            return DeleteCustomerResponse(success=True)
+        except psycopg2.Error as e:
+            context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
+
+    def ListCustomers(self, request, context):
+        customers = self._execute_query(
+            '''SELECT id, name, email, created_at 
+               FROM customers
+               ORDER BY created_at DESC
+               LIMIT %s OFFSET %s''',
+            (request.limit, (request.page - 1) * request.limit),
             fetchall=True
         )
         
-        orders = [
-            OrderResponse(
+        customer_list = [
+            CustomerResponse(
                 id=row[0],
-                customer_id=row[1],
-                product_name=row[2],
-                price=float(row[3]),
-                created_at=row[4].isoformat()
-            ) for row in results
+                name=row[1],
+                email=row[2],
+                created_at=row[3].isoformat()
+            ) for row in customers
         ]
         
-        return ListOrdersResponse(orders=orders)
+        total = self._execute_query(
+            '''SELECT COUNT(*) FROM customers''',
+            fetchone=True
+        )[0]
+        
+        return ListCustomersResponse(
+            customers=customer_list,
+            total=total
+        )
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    add_OrderServiceServicer_to_server(OrderService(), server)
-    server.add_insecure_port('[::]:50052')  # Другой порт для Order Service
-    print("Order Service запущен на порту 50052")
+    add_CustomerServiceServicer_to_server(CustomerService(), server)
+    server.add_insecure_port('[::]:50051')  
+    print("Customer Service запущен на порту 50051")
     server.start()
     server.wait_for_termination()
 
