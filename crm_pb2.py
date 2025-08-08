@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tcrm.proto\x12\x03\x63rm\"4\n\x15\x43reateCustomerRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\" \n\x12GetCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\"@\n\x15UpdateCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\"#\n\x15\x44\x65leteCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\")\n\x16\x44\x65leteCustomerResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x14ListCustomersRequest\x12\x0c\n\x04page\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\"O\n\x10\x43ustomerResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\t\"P\n\x15ListCustomersResponse\x12(\n\tcustomers\x18\x01 \x03(\x0b\x32\x15.crm.CustomerResponse\x12\r\n\x05total\x18\x02 \x01(\x05\"N\n\x12\x43reateOrderRequest\x12\x13\n\x0b\x63ustomer_id\x18\x01 \x01(\t\x12\x14\n\x0cproduct_name\x18\x02 \x01(\t\x12\r\n\x05price\x18\x03 \x01(\x01\".\n\x17GetCustomerOrderRequest\x12\x13\n\x0b\x63ustomer_id\x18\x01 \x01(\t\"i\n\rOrderResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x13\n\x0b\x63ustomer_id\x18\x02 \x01(\t\x12\x14\n\x0cproduct_name\x18\x03 \x01(\t\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x12\n\ncreated_at\x18\x05 \x01(\t2\xed\x02\n\x0f\x43ustomerService\x12\x43\n\x0e\x43reateCustomer\x12\x1a.crm.CreateCustomerRequest\x1a\x15.crm.CustomerResponse\x12=\n\x0bGetCustomer\x12\x17.crm.GetCustomerRequest\x1a\x15.crm.CustomerResponse\x12\x43\n\x0eUpdateCustomer\x12\x1a.crm.UpdateCustomerRequest\x1a\x15.crm.CustomerResponse\x12I\n\x0e\x44\x65leteCustomer\x12\x1a.crm.DeleteCustomerRequest\x1a\x1b.crm.DeleteCustomerResponse\x12\x46\n\rListCustomers\x12\x19.crm.ListCustomersRequest\x1a\x1a.crm.ListCustomersResponse2\x90\x01\n\x0cOrderService\x12:\n\x0b\x43reateOrder\x12\x17.crm.CreateOrderRequest\x1a\x12.crm.OrderResponse\x12\x44\n\x10GetCustomerOrder\x12\x1c.crm.GetCustomerOrderRequest\x1a\x12.crm.OrderResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\tcrm.proto\x12\x03\x63rm\"4\n\x15\x43reateCustomerRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\r\n\x05\x65mail\x18\x02 \x01(\t\" \n\x12GetCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\"@\n\x15UpdateCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\"#\n\x15\x44\x65leteCustomerRequest\x12\n\n\x02id\x18\x01 \x01(\t\")\n\x16\x44\x65leteCustomerResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\" \n\x12\x44\x65leteOrderRequest\x12\n\n\x02id\x18\x01 \x01(\t\"&\n\x13\x44\x65leteOrderResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\"3\n\x14ListCustomersRequest\x12\x0c\n\x04page\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\"O\n\x10\x43ustomerResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x0c\n\x04name\x18\x02 \x01(\t\x12\r\n\x05\x65mail\x18\x03 \x01(\t\x12\x12\n\ncreated_at\x18\x04 \x01(\t\"P\n\x15ListCustomersResponse\x12(\n\tcustomers\x18\x01 \x03(\x0b\x32\x15.crm.CustomerResponse\x12\r\n\x05total\x18\x02 \x01(\x05\"N\n\x12\x43reateOrderRequest\x12\x13\n\x0b\x63ustomer_id\x18\x01 \x01(\t\x12\x14\n\x0cproduct_name\x18\x02 \x01(\t\x12\r\n\x05price\x18\x03 \x01(\x01\".\n\x17GetCustomerOrderRequest\x12\x13\n\x0b\x63ustomer_id\x18\x01 \x01(\t\"i\n\rOrderResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x13\n\x0b\x63ustomer_id\x18\x02 \x01(\t\x12\x14\n\x0cproduct_name\x18\x03 \x01(\t\x12\r\n\x05price\x18\x04 \x01(\x01\x12\x12\n\ncreated_at\x18\x05 \x01(\t\"0\n\x11ListOrdersRequest\x12\x0c\n\x04page\x18\x01 \x01(\x05\x12\r\n\x05limit\x18\x02 \x01(\x05\"G\n\x12ListOrdersResponse\x12\"\n\x06orders\x18\x01 \x03(\x0b\x32\x12.crm.OrderResponse\x12\r\n\x05total\x18\x02 \x01(\x05\x32\xed\x02\n\x0f\x43ustomerService\x12\x43\n\x0e\x43reateCustomer\x12\x1a.crm.CreateCustomerRequest\x1a\x15.crm.CustomerResponse\x12=\n\x0bGetCustomer\x12\x17.crm.GetCustomerRequest\x1a\x15.crm.CustomerResponse\x12\x43\n\x0eUpdateCustomer\x12\x1a.crm.UpdateCustomerRequest\x1a\x15.crm.CustomerResponse\x12I\n\x0e\x44\x65leteCustomer\x12\x1a.crm.DeleteCustomerRequest\x1a\x1b.crm.DeleteCustomerResponse\x12\x46\n\rListCustomers\x12\x19.crm.ListCustomersRequest\x1a\x1a.crm.ListCustomersResponse2\x91\x02\n\x0cOrderService\x12:\n\x0b\x43reateOrder\x12\x17.crm.CreateOrderRequest\x1a\x12.crm.OrderResponse\x12\x44\n\x10GetCustomerOrder\x12\x1c.crm.GetCustomerOrderRequest\x1a\x12.crm.OrderResponse\x12=\n\nListOrders\x12\x16.crm.ListOrdersRequest\x1a\x17.crm.ListOrdersResponse\x12@\n\x0b\x44\x65leteOrder\x12\x17.crm.DeleteOrderRequest\x1a\x18.crm.DeleteOrderResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,20 +41,28 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_DELETECUSTOMERREQUEST']._serialized_end=207
   _globals['_DELETECUSTOMERRESPONSE']._serialized_start=209
   _globals['_DELETECUSTOMERRESPONSE']._serialized_end=250
-  _globals['_LISTCUSTOMERSREQUEST']._serialized_start=252
-  _globals['_LISTCUSTOMERSREQUEST']._serialized_end=303
-  _globals['_CUSTOMERRESPONSE']._serialized_start=305
-  _globals['_CUSTOMERRESPONSE']._serialized_end=384
-  _globals['_LISTCUSTOMERSRESPONSE']._serialized_start=386
-  _globals['_LISTCUSTOMERSRESPONSE']._serialized_end=466
-  _globals['_CREATEORDERREQUEST']._serialized_start=468
-  _globals['_CREATEORDERREQUEST']._serialized_end=546
-  _globals['_GETCUSTOMERORDERREQUEST']._serialized_start=548
-  _globals['_GETCUSTOMERORDERREQUEST']._serialized_end=594
-  _globals['_ORDERRESPONSE']._serialized_start=596
-  _globals['_ORDERRESPONSE']._serialized_end=701
-  _globals['_CUSTOMERSERVICE']._serialized_start=704
-  _globals['_CUSTOMERSERVICE']._serialized_end=1069
-  _globals['_ORDERSERVICE']._serialized_start=1072
-  _globals['_ORDERSERVICE']._serialized_end=1216
+  _globals['_DELETEORDERREQUEST']._serialized_start=252
+  _globals['_DELETEORDERREQUEST']._serialized_end=284
+  _globals['_DELETEORDERRESPONSE']._serialized_start=286
+  _globals['_DELETEORDERRESPONSE']._serialized_end=324
+  _globals['_LISTCUSTOMERSREQUEST']._serialized_start=326
+  _globals['_LISTCUSTOMERSREQUEST']._serialized_end=377
+  _globals['_CUSTOMERRESPONSE']._serialized_start=379
+  _globals['_CUSTOMERRESPONSE']._serialized_end=458
+  _globals['_LISTCUSTOMERSRESPONSE']._serialized_start=460
+  _globals['_LISTCUSTOMERSRESPONSE']._serialized_end=540
+  _globals['_CREATEORDERREQUEST']._serialized_start=542
+  _globals['_CREATEORDERREQUEST']._serialized_end=620
+  _globals['_GETCUSTOMERORDERREQUEST']._serialized_start=622
+  _globals['_GETCUSTOMERORDERREQUEST']._serialized_end=668
+  _globals['_ORDERRESPONSE']._serialized_start=670
+  _globals['_ORDERRESPONSE']._serialized_end=775
+  _globals['_LISTORDERSREQUEST']._serialized_start=777
+  _globals['_LISTORDERSREQUEST']._serialized_end=825
+  _globals['_LISTORDERSRESPONSE']._serialized_start=827
+  _globals['_LISTORDERSRESPONSE']._serialized_end=898
+  _globals['_CUSTOMERSERVICE']._serialized_start=901
+  _globals['_CUSTOMERSERVICE']._serialized_end=1266
+  _globals['_ORDERSERVICE']._serialized_start=1269
+  _globals['_ORDERSERVICE']._serialized_end=1542
 # @@protoc_insertion_point(module_scope)

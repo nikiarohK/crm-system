@@ -105,34 +105,78 @@ class OrderService(OrderServiceServicer):
         except psycopg2.IntegrityError as e:
             context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
 
+    def ListOrders(self, request, context):
+        try:
+            if request.page <= 0 or request.limit <= 0:
+                context.abort(grpc.StatusCode.INVALID_ARGUMENT, "page and limit must be positive integers")
+
+            orders = self._execute_query(
+                '''SELECT id, customer_id, product_name, price, created_at 
+                FROM orders
+                ORDER BY created_at DESC
+                LIMIT %s OFFSET %s''',
+                (request.limit, (request.page - 1) * request.limit),
+                fetchall=True
+            )
+            
+            total = self._execute_query(
+                '''SELECT COUNT(*) FROM orders''',
+                fetchone=True
+            )[0]
+            
+            return ListOrdersResponse(
+                orders=[
+                    OrderResponse(
+                        id=row[0],
+                        customer_id=row[1],
+                        product_name=row[2],
+                        price=row[3],
+                        created_at=row[4].isoformat()
+                    ) for row in orders
+                ],
+                total=total
+            )
+        except Exception as e:
+            context.abort(grpc.StatusCode.INTERNAL, f"Database error: {str(e)}")
+            
     def GetCustomerOrder(self, request, context):
         if not request.customer_id:
-            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "customer_id обязателен")
+            context.abort(grpc.StatusCode.INVALID_ARGUMENT, "customer_id is required")
 
         try:
-            order = self._execute_query(
+            orders = self._execute_query(
                 '''SELECT id, customer_id, product_name, price, created_at 
-                   FROM orders 
-                   WHERE customer_id = %s
-                   ORDER BY created_at DESC
-                   LIMIT 1''',
+                FROM orders 
+                WHERE customer_id = %s
+                ORDER BY created_at DESC''',
                 (request.customer_id,),
-                fetchone=True
+                fetchall=True
             )
             
-            if not order:
-                context.abort(grpc.StatusCode.NOT_FOUND, "Заказы не найдены")
-            
-            return OrderResponse(
-                id=order[0],
-                customer_id=order[1],
-                product_name=order[2],
-                price=order[3],
-                created_at=order[4].isoformat()
-            )
-        except psycopg2.Error as e:
-            context.abort(grpc.StatusCode.INTERNAL, f"Ошибка базы данных: {str(e)}")
+            if not orders:
+                context.abort(grpc.StatusCode.NOT_FOUND, "No orders found")
 
+            first_order = orders[0]
+            return OrderResponse(
+                id=first_order[0],
+                customer_id=first_order[1],
+                product_name=first_order[2],
+                price=first_order[3],
+                created_at=first_order[4].isoformat()
+            )
+        except Exception as e:
+            context.abort(grpc.StatusCode.INTERNAL, f"Database error: {str(e)}")
+            
+    def DeleteOrder(self, request, context):
+        try:
+            self._execute_query(
+                '''DELETE FROM orders WHERE id = %s''',
+                (request.id,)
+            )
+            return DeleteOrderResponse(success=True)
+        except Exception as e:
+            context.abort(grpc.StatusCode.INTERNAL, f"Database error: {str(e)}")
+            
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     add_OrderServiceServicer_to_server(OrderService(), server)

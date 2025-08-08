@@ -13,6 +13,8 @@ service CustomerService {
 service OrderService {
     rpc CreateOrder (CreateOrderRequest) returns (OrderResponse);
     rpc GetCustomerOrder (GetCustomerOrderRequest) returns (OrderResponse);
+    rpc ListOrders (ListOrdersRequest) returns (ListOrdersResponse);
+    rpc DeleteOrder (DeleteOrderRequest) returns (DeleteOrderResponse);
 }
 
 message CreateCustomerRequest {
@@ -35,6 +37,14 @@ message DeleteCustomerRequest {
 }
 
 message DeleteCustomerResponse {
+    bool success = 1;
+}
+
+message DeleteOrderRequest {
+    string id = 1;
+}
+
+message DeleteOrderResponse {
     bool success = 1;
 }
 
@@ -71,4 +81,14 @@ message OrderResponse {
     string product_name = 3;
     double price = 4;
     string created_at = 5;
+}
+
+message ListOrdersRequest {
+    int32 page = 1;
+    int32 limit = 2;
+}
+
+message ListOrdersResponse {
+    repeated OrderResponse orders = 1;
+    int32 total = 2;
 }

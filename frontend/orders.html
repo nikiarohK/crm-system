@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM System - Orders</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CRM System</h1>
+            <nav>
+                <a href="customers.html">Customers</a>
+                <a href="orders.html" class="active">Orders</a>
+                <button id="logoutBtn">Logout</button>
+            </nav>
+        </header>
+        
+        <div class="content">
+            <div class="order-actions">
+                <button id="addOrderBtn">Add Order</button>
+                <div class="form-group">
+                    <label for="customerFilter">Filter by Customer:</label>
+                    <select id="customerFilter">
+                        <option value="">All Customers</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="orderModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2 id="orderModalTitle">Add Order</h2>
+                    <form id="orderForm">
+                        <input type="hidden" id="orderId">
+                        <div class="form-group">
+                            <label for="orderCustomerId">Customer:</label>
+                            <select id="orderCustomerId" required></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="productName">Product Name:</label>
+                            <input type="text" id="productName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">Price:</label>
+                            <input type="number" id="price" step="0.01" required>
+                        </div>
+                        <button type="submit">Save</button>
+                    </form>
+                </div>
+            </div>
+            
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Customer</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/orders.js"></script>
+</body>
+</html>

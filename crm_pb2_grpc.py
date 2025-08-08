@@ -288,6 +288,16 @@ class OrderServiceStub(object):
                 request_serializer=crm__pb2.GetCustomerOrderRequest.SerializeToString,
                 response_deserializer=crm__pb2.OrderResponse.FromString,
                 _registered_method=True)
+        self.ListOrders = channel.unary_unary(
+                '/crm.OrderService/ListOrders',
+                request_serializer=crm__pb2.ListOrdersRequest.SerializeToString,
+                response_deserializer=crm__pb2.ListOrdersResponse.FromString,
+                _registered_method=True)
+        self.DeleteOrder = channel.unary_unary(
+                '/crm.OrderService/DeleteOrder',
+                request_serializer=crm__pb2.DeleteOrderRequest.SerializeToString,
+                response_deserializer=crm__pb2.DeleteOrderResponse.FromString,
+                _registered_method=True)
 
 
 class OrderServiceServicer(object):
@@ -305,6 +315,18 @@ class OrderServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def ListOrders(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteOrder(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_OrderServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -317,6 +339,16 @@ def add_OrderServiceServicer_to_server(servicer, server):
                     servicer.GetCustomerOrder,
                     request_deserializer=crm__pb2.GetCustomerOrderRequest.FromString,
                     response_serializer=crm__pb2.OrderResponse.SerializeToString,
+            ),
+            'ListOrders': grpc.unary_unary_rpc_method_handler(
+                    servicer.ListOrders,
+                    request_deserializer=crm__pb2.ListOrdersRequest.FromString,
+                    response_serializer=crm__pb2.ListOrdersResponse.SerializeToString,
+            ),
+            'DeleteOrder': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteOrder,
+                    request_deserializer=crm__pb2.DeleteOrderRequest.FromString,
+                    response_serializer=crm__pb2.DeleteOrderResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -373,6 +405,60 @@ class OrderService(object):
             '/crm.OrderService/GetCustomerOrder',
             crm__pb2.GetCustomerOrderRequest.SerializeToString,
             crm__pb2.OrderResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def ListOrders(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/crm.OrderService/ListOrders',
+            crm__pb2.ListOrdersRequest.SerializeToString,
+            crm__pb2.ListOrdersResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def DeleteOrder(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/crm.OrderService/DeleteOrder',
+            crm__pb2.DeleteOrderRequest.SerializeToString,
+            crm__pb2.DeleteOrderResponse.FromString,
             options,
             channel_credentials,
             insecure,
