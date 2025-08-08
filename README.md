@@ -1,7 +1,7 @@
 # CRM система
 
 1. Убедись, что у тебя установлен Python 3.7 или новее
-2. Установи PostgreSQL (если нет) - можно скачать тут: https://www.postgresql.org/download/
+2. Установи PostgreSQL 
 
 ## Как запустить проект
 
