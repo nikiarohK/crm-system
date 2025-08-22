@@ -10,8 +10,6 @@ grpcio-reflection==1.74.0
 grpcio-tools==1.74.0
 h11==0.16.0
 idna==3.10
-jose==1.0.0
-jwt==1.4.0
 passlib==1.7.4
 protobuf==6.31.1
 psycopg2-binary==2.9.10
